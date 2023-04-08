@@ -30,6 +30,8 @@
         {
             panel1 = new Panel();
             textBox1 = new TextBox();
+            axisXMaxTextBox = new TextBox();
+            axisYMaxTextBox = new TextBox();
             SuspendLayout();
             // 
             // panel1
@@ -48,11 +50,27 @@
             textBox1.Size = new Size(223, 27);
             textBox1.TabIndex = 1;
             // 
+            // axisXMaxTextBox
+            // 
+            axisXMaxTextBox.Location = new Point(10, 10);
+            axisXMaxTextBox.Width = 100;
+            //axisXMaxTextBox.TextChanged += axisXMaxTextBox_TextChanged;
+            this.Controls.Add(axisXMaxTextBox);
+            // 
+            // axisYMaxTextBox
+            // 
+            axisYMaxTextBox.Location = new Point(10, 30);
+            axisYMaxTextBox.Width = 100;
+            //axisYMaxTextBox.TextChanged += axisYMaxTextBox_TextChanged;
+            this.Controls.Add(axisYMaxTextBox);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1240, 648);
+            Controls.Add(axisYMaxTextBox);
+            Controls.Add(axisXMaxTextBox);
             Controls.Add(textBox1);
             Controls.Add(panel1);
             Name = "Form1";
@@ -65,5 +83,7 @@
 
         private Panel panel1;
         private TextBox textBox1;
+        private TextBox axisXMaxTextBox;
+        private TextBox axisYMaxTextBox;
     }
 }
