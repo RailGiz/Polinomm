@@ -45,24 +45,27 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(57, 138);
+            textBox1.Location = new Point(45, 248);
+            textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(223, 27);
+            textBox1.Size = new Size(271, 99);
             textBox1.TabIndex = 1;
             // 
             // axisXMaxTextBox
             // 
-            axisXMaxTextBox.Location = new Point(10, 10);
-            axisXMaxTextBox.Width = 100;
-            //axisXMaxTextBox.TextChanged += axisXMaxTextBox_TextChanged;
-            this.Controls.Add(axisXMaxTextBox);
+            axisXMaxTextBox.Location = new Point(45, 203);
+            axisXMaxTextBox.Name = "axisXMaxTextBox";
+            axisXMaxTextBox.Size = new Size(100, 27);
+            axisXMaxTextBox.TabIndex = 0;
+            axisXMaxTextBox.TextChanged += axisXMaxTextBox_TextChanged;
             // 
             // axisYMaxTextBox
             // 
-            axisYMaxTextBox.Location = new Point(10, 30);
-            axisYMaxTextBox.Width = 100;
-            //axisYMaxTextBox.TextChanged += axisYMaxTextBox_TextChanged;
-            this.Controls.Add(axisYMaxTextBox);
+            axisYMaxTextBox.Location = new Point(216, 203);
+            axisYMaxTextBox.Name = "axisYMaxTextBox";
+            axisYMaxTextBox.Size = new Size(100, 27);
+            axisYMaxTextBox.TabIndex = 1;
+            axisYMaxTextBox.TextChanged += axisYMaxTextBox_TextChanged;
             // 
             // Form1
             // 

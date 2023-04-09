@@ -31,12 +31,16 @@ namespace Polinomm
                 Font font = new Font("Arial", 20);
                 Brush brush = Brushes.Black;
                 StringFormat format = new StringFormat();
-                format.Alignment = StringAlignment.Center;
-                format.LineAlignment = StringAlignment.Far;
-                g.DrawString("y", font, brush, panel1.Width / 2, 0, format);
+
+                // Добавляем подпись "y" по вертикальной оси
                 format.Alignment = StringAlignment.Near;
                 format.LineAlignment = StringAlignment.Center;
-                g.DrawString("x", font, brush, panel1.Width - 20, panel1.Height / 2, format);
+                g.DrawString("y", font, brush, panel1.Width / 2, panel1.Height - 500, format);
+
+                // Добавляем подпись "x" по горизонтальной оси
+                format.Alignment = StringAlignment.Near;
+                format.LineAlignment = StringAlignment.Near;
+                g.DrawString("x", font, brush, panel1.Width - 30, panel1.Height / 2, format);
             }
         }
 
@@ -91,8 +95,8 @@ namespace Polinomm
             }
 
             // Интерполяционный полином Лагранжа
-            double integral = 0;
-            for (int x = 0; x < panel1.Width - 1; x++)
+            double prevSum = 0;
+            for (int x = 0; x < panel1.Width; x++)
             {
                 double sum = 0;
                 for (int i = 0; i < points.Count; i++)
@@ -108,7 +112,7 @@ namespace Polinomm
                     }
                     sum += product;
                 }
-                integral += sum * (panel1.Width / (double)xAxisMaxValue);
+                
 
                 // Переводим координаты полинома в координаты панели
                 float panelY = (float)((yAxisMaxValue / 2 - sum) / yAxisMaxValue * panel1.Height);
@@ -116,10 +120,13 @@ namespace Polinomm
                 // Рисуем линии полинома
                 if (x > 0)
                 {
-                    float prevPanelY = (float)((yAxisMaxValue / 2 - integral + sum / panel1.Width * xAxisMaxValue) / yAxisMaxValue * panel1.Height);
-                    Pen bluePen = new Pen(Color.FromArgb(100, 0, 0, 255), 3); // синий цвет с alpha = 100 (полупрозрачный) 
+                    float prevPanelY = (float)((yAxisMaxValue / 2 - prevSum) / yAxisMaxValue * panel1.Height);
+                    Pen bluePen = new Pen(Color.FromArgb(100, 0, 0, 255), 3);
                     g.DrawLine(bluePen, x - 1, prevPanelY, x, panelY);
                 }
+                prevSum = sum;
+                // Обновляем графический контекст панели
+                panel1.Invalidate();
             }
 
             // Разбиваем оси на равные отрезки
@@ -145,8 +152,24 @@ namespace Polinomm
                 g.DrawString(xValue.ToString(), tickFont, tickBrush, xTick, panel1.Height / 2 + tickSize, tickFormat);
                 g.DrawString(yValue.ToString(), tickFont, tickBrush, panel1.Width / 2 - tickSize * 2, yTick, tickFormat);
             }
-            textBox1.Text = $"Интеграл = {integral}";
+            textBox1.Text = $"Интеграл = {prevSum}";
             panel1.Invalidate();
+        }
+
+        private void axisXMaxTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (int.TryParse(axisXMaxTextBox.Text, out int value))
+            {
+                xAxisMaxValue = value;
+            }
+        }
+
+        private void axisYMaxTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (int.TryParse(axisYMaxTextBox.Text, out int value))
+            {
+                yAxisMaxValue = value;
+            }
         }
     }
 }
