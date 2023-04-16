@@ -1,10 +1,13 @@
+using System.Drawing;
+using System.Reflection;
+
 namespace Polinomm
 {
     public partial class Form1 : Form
     {
         private Bitmap bitmap;
-        private int xAxisMaxValue = 100;
-        private int yAxisMaxValue = 100;
+        private int xAxisMaxValue = 1000;
+        private int yAxisMaxValue = 1000;
 
         public Form1()
         {
@@ -41,6 +44,13 @@ namespace Polinomm
                 format.Alignment = StringAlignment.Near;
                 format.LineAlignment = StringAlignment.Near;
                 g.DrawString("x", font, brush, panel1.Width - 30, panel1.Height / 2, format);
+
+                points.Add(new PointF(-100, 100));
+                 points.Add(new PointF(0, 0));
+                
+                 points.Add(new PointF(100, 100));
+                 DrawLagrangePolynomial();
+
             }
         }
 
@@ -52,6 +62,9 @@ namespace Polinomm
             );
             points.Add(point);
             DrawPoints();
+            /* points.Add(new PointF(-100, -100));
+             points.Add(new PointF(0, 0));
+             points.Add(new PointF(100, 100));*/
             DrawLagrangePolynomial();
         }
 
@@ -75,9 +88,11 @@ namespace Polinomm
             }
             panel1.Invalidate();
         }
+
+
         private void DrawLagrangePolynomial()
         {
-            if (points.Count < 2)
+            if (points.Count < 2 || panel1.Width <= 0 || panel1.Height <= 0)
             {
                 return;
             }
@@ -106,21 +121,24 @@ namespace Polinomm
                     {
                         if (j != i)
                         {
-                            double panelX = (float)x / panel1.Width * xAxisMaxValue - xAxisMaxValue / 2;
+
+                            double panelX = (double)x / panel1.Width * xAxisMaxValue - xAxisMaxValue / 2;
                             product *= (panelX - points[j].X) / (double)(points[i].X - points[j].X);
                         }
                     }
                     sum += product;
                 }
-                
+
 
                 // ѕереводим координаты полинома в координаты панели
                 float panelY = (float)((yAxisMaxValue / 2 - sum) / yAxisMaxValue * panel1.Height);
+                panelY = Math.Max(float.MinValue, Math.Min(float.MaxValue, panelY));
 
                 // –исуем линии полинома
                 if (x > 0)
                 {
                     float prevPanelY = (float)((yAxisMaxValue / 2 - prevSum) / yAxisMaxValue * panel1.Height);
+                    prevPanelY = Math.Max(float.MinValue, Math.Min(float.MaxValue, prevPanelY));
                     Pen bluePen = new Pen(Color.FromArgb(100, 0, 0, 255), 3);
                     g.DrawLine(bluePen, x - 1, prevPanelY, x, panelY);
                 }
@@ -152,7 +170,41 @@ namespace Polinomm
                 g.DrawString(xValue.ToString(), tickFont, tickBrush, xTick, panel1.Height / 2 + tickSize, tickFormat);
                 g.DrawString(yValue.ToString(), tickFont, tickBrush, panel1.Width / 2 - tickSize * 2, yTick, tickFormat);
             }
-            textBox1.Text = $"»нтеграл = {prevSum}";
+
+            double integrationStep = (xAxisMaxValue - 0) / panel1.Width;
+            double integralValue = 0;
+
+            for (int x = 1; x < panel1.Width; x++)
+            {
+                double panelX1 = (float)(x - 1) / panel1.Width * xAxisMaxValue - xAxisMaxValue / 2;
+                double panelX2 = (float)x / panel1.Width * xAxisMaxValue - xAxisMaxValue / 2;
+
+                double sum1 = 0;
+                double sum2 = 0;
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    double product1 = y[i];
+                    double product2 = y[i];
+
+                    for (int j = 0; j < points.Count; j++)
+                    {
+                        if (j != i)
+                        {
+                            product1 *= (panelX1 - points[j].X) / (double)(points[i].X - points[j].X);
+                            product2 *= (panelX2 - points[j].X) / (double)(points[i].X - points[j].X);
+                        }
+                    }
+                    sum1 += product1;
+                    sum2 += product2;
+                }
+
+                // ¬ычисл€ем приближенное значение интеграла с использованием метода трапеций
+                integralValue += (sum1 + sum2) / 2 * integrationStep;
+            }
+
+            // ¬ыводим значение интеграла в textBox1
+            textBox1.Text = integralValue.ToString();
             panel1.Invalidate();
         }
 
@@ -173,3 +225,5 @@ namespace Polinomm
         }
     }
 }
+
+
